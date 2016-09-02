@@ -27,3 +27,11 @@
 *.exe
 *.out
 *.app
+ClawFree
+
+#OS files
+*.DS_Store
+
+#Project XCode files
+*.build
+*.xcodeproj
