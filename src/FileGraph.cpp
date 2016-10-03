@@ -1,25 +1,27 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "FileGraph.h"
 #include "Graph.h"
 
 
 using namespace std;
 
-void FileGraph::loadFile(char *fileName){
-   ifstream Instancia(fileName, ios::in);
-   int rSize;
-
-   if (!Instancia) {
+void FileGraph::loadFile(string fileName){
+    ifstream dados;
+    dados.open(fileName.c_str());
+    
+    int rSize;
+   if (!(dados.is_open())) {
       cerr << "Arquivo nao pode ser aberto" << endl;
       //return NULL;
    }
    //string header;
    //std::getline(Instancia, header);
-
+    
    int n;
-   Instancia >> n; // numero de vertices
-
+   dados >> n; // numero de vertices
+   
 
    //Alocando estruturas
    Graph::order = n;
@@ -34,7 +36,7 @@ void FileGraph::loadFile(char *fileName){
       for (int j = i+1; j < n; j++) 
       {
 	 int data;
-	 Instancia >> data;
+	 dados >> data;
 	 if(data == 1){
 	    Graph::w[i][j] = 1;
 	    Graph::w[j][i] = 1;
@@ -47,6 +49,7 @@ void FileGraph::loadFile(char *fileName){
 	 }
       }//printf("\n");
    }
-   Instancia.close();
+   dados.close();
+    
 }
 

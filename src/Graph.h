@@ -11,14 +11,14 @@ struct Graph{
    Graph();
    //Representacao de uma solucao
    int edit;
-   vector<list<int>> Nv;
+   vector<list<int> > Nv;
 
    void print();
    /* Dados da entrada */
    //Dimensao do grafo
-	static int order;
-	static int **w; 
-	static vector<list<int>> la;
+	static int order;// quantidade de vertices
+	static int **w; // matrix de incidência
+	static vector<list<int> > la;// visinhos de [i]
 };
 
 #endif

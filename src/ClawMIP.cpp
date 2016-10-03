@@ -1,6 +1,7 @@
 #include "FileGraph.h"
 #include "Graph.h"
-//#include "HC.h"
+#include "Grafico.h"
+#include "callbacks.h"
 #include <ilcplex/ilocplex.h>
 #include <algorithm>
 #include <iostream>
@@ -8,46 +9,56 @@
 
 using namespace std;
 
-double OptimizeClaw(int n, int **w);
+double OptimizeClaw(int n, int **w, bool separacaoInequacoes);
 double OptimizeClawVertex(int n, int **w);
 
-int main_Modelo(int argc, char** argv){
+
+int main(int argc, char** argv){
 	struct timeval tempoAntes;
     struct timeval tempoDepois;
-
-
-	// Carregando dados de entrada
-	if (argc != 3) {
-		cout << "Parametros invalidos\n";
-		cout << " ./claw [Instancia] [estrategia]" << endl;
-		cout << " [estrategia] : 0 - MIP edge" << endl;
-		cout << " [estrategia] : 1 - MIP vertex" << endl;
-		//cout << " [estrategia] : 2 - HC edge" << endl;
-		exit(1);
-	}
-
-   	// ----- Carregar Dados ----- //
-
-   	// Abre arquivo
-
-   	char *instancia;
-    	instancia = argv[1];
-	int alg = atoi(argv[2]);
-
-	FileGraph::loadFile(instancia);
-
-
+    
+    /*lendo parametros*/
+    string instancia;
+    int problem;
+    bool separacaoInequacoes;
+    
+    if (argc == 1) {
+        //instancia = "instances/100_1000_500.txt";
+        instancia = "instances/50_500_125.txt";
+        //instancia = "instances/5_50_22.txt";
+        problem = 0;
+        separacaoInequacoes = true;
+    }else if(argc > 3){
+        instancia.append(argv[1]);
+        problem = atoi(argv[2]);
+        if(atoi(argv[3]) == 1){
+            separacaoInequacoes = true;
+        }else{
+            separacaoInequacoes = false;
+        }
+    }else{
+        printf("Parameters");
+    }
+    FileGraph::loadFile(instancia);
+    cout << "Instance: "<<instancia << endl <<
+    "Problem: "<< problem << " (0 - Edges, 1 - Vertex)"<< endl <<
+    "Branch and Cut: "<< separacaoInequacoes << " (1 - True, 0 - False)"<< endl<< endl;
 
 	srand(time(NULL));
 	gettimeofday(&tempoAntes, NULL);
-
+    
+    
+    //Grafico::plotarGrafoEntrada();
+    //return 0;
 
 	int sol;
-	if(alg == 0)
-	   OptimizeClaw(Graph::order, Graph::w);
-	if(alg == 1)
+    if(problem == 0){
+	   OptimizeClaw(Graph::order, Graph::w, separacaoInequacoes);
+    }
+    if(problem == 1){
 	   OptimizeClawVertex(Graph::order, Graph::w);
-	/*if(alg == 2)
+    }
+	/*if(problem == 2)
 	{
 	   HC hc;
 	   hc.buildGraph();
@@ -70,7 +81,7 @@ int main_Modelo(int argc, char** argv){
 }
 
 //Implementa o modelo inteiro do Claw-free com edicao de arestas
-double OptimizeClaw(int n, int **w)
+double OptimizeClaw(int n, int **w, bool separacaoInequacoes)
 {
 	IloEnv env;
 	
@@ -115,9 +126,27 @@ double OptimizeClaw(int n, int **w)
     	// Adicionando a FO
     	modelo.add(IloMinimize(env, PosEdge + NegEdge));
     	
-
+    
+    if(!separacaoInequacoes){
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i+1; j < n; j++)
+            {
+                for (int k = j+1; k < n; k++)
+                {
+                    for (int l = k+1; l < n; l++)
+                    {
+                        modelo.add( x[i][j] + x[i][k] + x[i][l] <= x[j][k] + x[j][l] + x[k][l] + 2);
+                        modelo.add( x[i][j] + x[j][k] + x[j][l] <= x[i][k] + x[i][l] + x[k][l] + 2);
+                        modelo.add( x[i][k] + x[j][k] + x[k][l] <= x[i][j] + x[i][l] + x[j][l] + 2);
+                        modelo.add( x[i][l] + x[j][l] + x[k][l] <= x[i][j] + x[i][k] + x[j][k] + 2);
+                    }
+                }	
+            }	
+        }
+    }
 	// Restricoes 1 - Proibi a formação de P4
-	for (int i = 0; i < n; i++) 
+	/*for (int i = 0; i < n; i++)
 	{
 	   for (int j = i+1; j < n; j++) 
 	   {
@@ -132,10 +161,25 @@ double OptimizeClaw(int n, int **w)
 		 }
 	      }	
 	   }	
-	}
+	}*/
 
 	IloCplex CLAW(modelo);
-	//CLAW.exportModel("CLAW.lp");
+    
+    
+    //Ativando B&C
+    int userCuts = 0;
+    vector< vector<double> > mat(n);
+    for(int i=0; i < n; ++i){
+        mat[i] = vector<double>(n);
+    }
+    if(separacaoInequacoes){
+        CLAW.use(PrgDin(env, x, n, mat, userCuts));
+        CLAW.use(PrgDin2(env, x, n, mat, userCuts));
+    }
+    //CLAW.exportModel("CLAW.lp");
+    
+   // CLAW.setOut(env.getNullStream());
+    
 	CLAW.solve();
    
 	cout << "Nodes: " << CLAW.getNnodes() << endl;

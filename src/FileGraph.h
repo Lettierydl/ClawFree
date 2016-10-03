@@ -2,10 +2,19 @@
 #define FGRAPH_H
 
 
-#include "FileGraph.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sys/stat.h>
 
-struct FileGraph{
-	static void loadFile(char *fileName);
+using namespace std;
+
+class FileGraph{
+public:
+	static void loadFile(string fileName);
 };
 
 #endif

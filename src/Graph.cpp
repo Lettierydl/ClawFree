@@ -3,8 +3,7 @@
 
 using namespace std;
 
-Graph::Graph() : edit(0), Nv(Graph::la)
-{
+Graph::Graph() : edit(0), Nv(Graph::la) {
 }
 
 void Graph::print()
@@ -21,4 +20,4 @@ void Graph::print()
 
 int Graph::order;
 int **Graph::w; 
-vector<list<int>> Graph::la; 
+vector<list<int> > Graph::la; 
