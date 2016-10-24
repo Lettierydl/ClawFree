@@ -17,6 +17,66 @@
 using namespace std;
 #include "Inspection.h"
 
+vector<Inspection::equacaoViolada> Inspection::inspectParametris(vector<vector<double> > grafo, float violacao, int sizeVioladas){
+    int n = grafo.size();
+    vector<Inspection::equacaoViolada > falhas (0);
+    for (int i = 0; i < n; i++){
+        for (int j = i+1; j < n; j++){
+            for (int k = j+1; k < n; k++){
+                for (int l = k+1; l < n; l++){
+                    
+                    float a1 = grafo[i][j];
+                    float a2 = grafo[i][k];
+                    float a3 = grafo[i][l];
+                    
+                    float a4 = grafo[j][k];
+                    float a5 = grafo[j][l];
+                    
+                    float a6 = grafo[k][l];
+                    
+                    if( (a1 + a2 + a3) - (a4 + a5 + a6) > violacao){// i no centro
+                        vector<int> furo(4);
+                        furo[0] = i; furo[1] = j; furo[2] = k;furo[3] = l;
+                        equacaoViolada e;
+                        e.vertices = furo;
+                        e.valorEquacao = (a1 + a2 + a3) - (a4 + a5 + a6);
+                        falhas.push_back(e);
+                    }else if( (a1 + a4 + a5) - (a2 + a3 + a6) > violacao){// j no centro
+                        vector<int> furo(4);
+                        furo[0] = j; furo[1] = i; furo[2] = k;furo[3] = l;
+                        equacaoViolada e;
+                        e.vertices = furo;
+                        e.valorEquacao = (a1 + a4 + a5) - (a2 + a3 + a6);
+                        falhas.push_back(e);
+                    }else if( (a2 + a4 + a6) - (a1 + a3 + a5) > violacao){// k no centro
+                        vector<int> furo(4);
+                        furo[0] = k; furo[1] = j; furo[2] = i;furo[3] = l;
+                        equacaoViolada e;
+                        e.vertices = furo;
+                        e.valorEquacao = (a2 + a4 + a6) - (a1 + a3 + a5);
+                        falhas.push_back(e);
+                    }else if( (a3 + a5 + a6) - (a1 + a2 + a4) > violacao){// l no centro
+                        vector<int> furo(4);
+                        furo[0] = l; furo[1] = j; furo[2] = k;furo[3] = i;
+                        equacaoViolada e;
+                        e.vertices = furo;
+                        e.valorEquacao = (a3 + a5 + a6) - (a1 + a2 + a4);
+                        falhas.push_back(e);
+                    }
+                   
+                    if(falhas.size() >= sizeVioladas){
+                        return falhas;
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    //cout << " - "<<falhas.size()<< endl;
+    return falhas;
+}
+
 vector<Inspection::equacaoViolada> Inspection::inspect(vector<vector<double> > grafo){
     int n = grafo.size();
     vector<Inspection::equacaoViolada > falhas (0);
@@ -109,7 +169,7 @@ vector<Inspection::equacaoViolada> Inspection::inspectNewLevel(vector<equacaoVio
             
         }
     }
-    int corteFalhas = grafo.size()*grafo.size()*grafo.size();
+    int corteFalhas = grafo.size()*grafo.size();
     if(newLevelFalhas.size() > corteFalhas){
         cout << newLevelFalhas.size()<< endl;
         newLevelFalhas.resize(corteFalhas);

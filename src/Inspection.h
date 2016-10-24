@@ -27,6 +27,7 @@ public:
     };
     
     static vector<equacaoViolada> inspect(vector<vector<double> > grafo);
+    static vector<equacaoViolada> inspectParametris(vector<vector<double> > grafo, float violacao, int sizeVioladas);//violacao é o valor da equacao, sizeVioladas criterio de parada das equacoes violadas
     static vector<equacaoViolada> inspectNewLevel(vector<equacaoViolada> falhar, vector<vector<double> > grafo);
     static vector<vector<int> > combinacoesVertices(int centro, int ordem, int n);
     static vector< list <int> > vizinhos(vector<vector< double > >grafo);
