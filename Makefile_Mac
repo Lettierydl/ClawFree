@@ -50,10 +50,10 @@ CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 
 CCLNDIRS  = -L$(CPLEXLIBDIR) -L$(CONCERTLIBDIR)
 CLNDIRS   = -L$(CPLEXLIBDIR)
-CLNFLAGS  = -lcplex -lm -lpthread -framework CoreFoundation -framework IOKit
+CLNFLAGS  = -lcplex -lm -lpthread -framework CoreFoundation -framework IOKit -lboost_program_options
 
 
-CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -m64 -lm -lpthread -framework CoreFoundation -framework IOKit
+CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -m64 -lm -lpthread -framework CoreFoundation -framework IOKit -lboost_program_options
 
 
 
@@ -64,13 +64,13 @@ CPLEXINCDIR   = $(CPLEXDIR)/include
 
 CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR)
 
-all:clean ClawFree
+all:clean PI
 
-ClawFree:src/ClawMIP.cpp
-		 $(CPPC) $(CCFLAGS) -o ClawFree src/*.cpp $(CCLNFLAGS)
+PI:src/pi.cpp
+		 $(CPPC) $(CCFLAGS) -o PI *.cpp $(CCLNFLAGS)
 	
 	
 clean:
-		rm -rf ClawFree *.o ag *~ *.oo core* -f
+		rm -rf PI *.o ag *~ *.oo core* -f
 
 	

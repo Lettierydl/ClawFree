@@ -31,9 +31,9 @@ int main(int argc, char** argv){
         //instancia = "instances/500_2000_1500.txt";
         //instancia = "instances/400_2000_1000.txt";
         //instancia = "instances/300_1000_600.txt";
-        //instancia = "instances/200_1000_500.txt";
+        instancia = "instances/200_1000_500.txt";
         //instancia = "instances/150_1000_500.txt";
-        instancia = "instances/100_1000_500.txt";
+        //instancia = "instances/100_1000_500.txt";
         //instancia = "instances/50_500_125.txt";
         //instancia = "instances/5_50_22.txt";
         problem = 0;

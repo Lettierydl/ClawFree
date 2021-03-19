@@ -16,6 +16,8 @@
 
 using namespace std;
 #include "Inspection.h"
+#define EPS 0.0001
+
 
 vector<Inspection::equacaoViolada> Inspection::inspectParametris(vector<vector<double> > grafo, float violacao, int sizeVioladas){
     int n = grafo.size();
@@ -34,28 +36,28 @@ vector<Inspection::equacaoViolada> Inspection::inspectParametris(vector<vector<d
                     
                     float a6 = grafo[k][l];
                     
-                    if( (a1 + a2 + a3) - (a4 + a5 + a6) > violacao){// i no centro
+                    if( (a1 + a2 + a3) - (a4 + a5 + a6) > violacao + EPS){// i no centro
                         vector<int> furo(4);
                         furo[0] = i; furo[1] = j; furo[2] = k;furo[3] = l;
                         equacaoViolada e;
                         e.vertices = furo;
                         e.valorEquacao = (a1 + a2 + a3) - (a4 + a5 + a6);
                         falhas.push_back(e);
-                    }else if( (a1 + a4 + a5) - (a2 + a3 + a6) > violacao){// j no centro
+                    }else if( (a1 + a4 + a5) - (a2 + a3 + a6) > violacao+ EPS){// j no centro
                         vector<int> furo(4);
                         furo[0] = j; furo[1] = i; furo[2] = k;furo[3] = l;
                         equacaoViolada e;
                         e.vertices = furo;
                         e.valorEquacao = (a1 + a4 + a5) - (a2 + a3 + a6);
                         falhas.push_back(e);
-                    }else if( (a2 + a4 + a6) - (a1 + a3 + a5) > violacao){// k no centro
+                    }else if( (a2 + a4 + a6) - (a1 + a3 + a5) > violacao+ EPS){// k no centro
                         vector<int> furo(4);
                         furo[0] = k; furo[1] = j; furo[2] = i;furo[3] = l;
                         equacaoViolada e;
                         e.vertices = furo;
                         e.valorEquacao = (a2 + a4 + a6) - (a1 + a3 + a5);
                         falhas.push_back(e);
-                    }else if( (a3 + a5 + a6) - (a1 + a2 + a4) > violacao){// l no centro
+                    }else if( (a3 + a5 + a6) - (a1 + a2 + a4) > violacao+ EPS){// l no centro
                         vector<int> furo(4);
                         furo[0] = l; furo[1] = j; furo[2] = k;furo[3] = i;
                         equacaoViolada e;

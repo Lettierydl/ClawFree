@@ -12,10 +12,10 @@ void FileGraph::loadFile(string fileName){
     dados.open(fileName.c_str());
     
     int rSize;
-   if (!(dados.is_open())) {
-      cerr << "Arquivo nao pode ser aberto" << endl;
+    if (!(dados.is_open())) {
+        cerr << "Arquivo nao pode ser aberto" << endl;
       //return NULL;
-   }
+    }
    //string header;
    //std::getline(Instancia, header);
     

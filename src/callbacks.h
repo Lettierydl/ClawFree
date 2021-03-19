@@ -58,8 +58,9 @@ ILOLAZYCONSTRAINTCALLBACK4(PrgDin, IloArray <IloBoolVarArray >&, x,const int&,  
         }
     }
     printf("Begin Inspect------- INT\n");
+    //int n = mat.size()*mat.size();
     int n = INT_MAX;
-
+    
     vector<Inspection::equacaoViolada> falhas = callcack(mat, n);
     
     for(int f = 0; f< falhas.size(); f++){
@@ -77,7 +78,6 @@ ILOLAZYCONSTRAINTCALLBACK4(PrgDin, IloArray <IloBoolVarArray >&, x,const int&,  
                 [max(falhas[f].vertices[i],falhas[f].vertices[j])];
             }
         }
-        
         add(sumX <= 2);
     }
     
@@ -95,6 +95,7 @@ ILOUSERCUTCALLBACK4(PrgDin2, IloArray <IloBoolVarArray >&, x,const int&, tam_v,
         }
     }
     printf("Begin Inspect-------\n");
+    //int n = mat.size()*mat.size();
     int n = INT_MAX;
     vector<Inspection::equacaoViolada> falhas = callcack(mat,n);
     
